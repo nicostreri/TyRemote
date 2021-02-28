@@ -26,9 +26,9 @@ class BColors:
 class Command:
     LOCK = u'🔒'  # TODO
     UNLOCK = u'🔓'  # TODO
-    LOCATION = u'🌍'  # TODO
-    SCREENSHOT = u'🖼'  # TODO
-    WEBCAM = u'📸'  # TODO
+    LOCATION = u'🌍'
+    SCREENSHOT = u'🖼'
+    WEBCAM = u'📸'
     POWER = u'🛑'  # TODO
     SUSPEND = u'🌙'  # TODO
     VOLUME_UP = u'🔊'  # TODO
@@ -37,7 +37,7 @@ class Command:
     PLAY_PAUSE = u'⏯'  # TODO
     NEXT = u'⏭'  # TODO
     PREVIOUS = u'⏮'  # TODO
-    INFO = u'ℹ️'  # TODO
+    INFO = u'ℹ️'
 
 
 def ascii():
