@@ -4,7 +4,7 @@
 import telebot
 import os
 from dotenv import load_dotenv
-
+import Localization
 
 class BColors:
     HEADER = '\033[95m'
@@ -79,6 +79,26 @@ if __name__ == '__main__':
             bot.send_message(message.chat.id, "Unauthorized!!")
             return False
         return True
+
+
+    @bot.message_handler(commands=['location'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.LOCATION and authorization(msg))
+    def localization_command(message):
+        """
+            Send the PC location
+        """
+        bot.send_chat_action(message.chat.id, "find_location")
+        try:
+            lat, lng = Localization.get_location_by_wifi()
+            bot.send_message(message.chat.id, "By WiFi:")
+            bot.send_location(message.chat.id, lat, lng)
+        except Localization.FailedLocalization:
+            try:
+                lat, lng = Localization.get_location_by_ip()
+                bot.send_message(message.chat.id, "By IP:")
+                bot.send_location(message.chat.id, lat, lng)
+            except Localization.FailedLocalization:
+                bot.reply_to(message, "Could not get the location.")
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     print(BColors.YELLOW + "Waiting for Telegram commands\n" + BColors.ENDC)
