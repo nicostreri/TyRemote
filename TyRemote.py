@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import platform
+import socket
+
+import psutil as psutil
 import pyautogui as pyautogui
 import telebot
 import os
 from dotenv import load_dotenv
+from requests import get
+
 import Localization
 import cv2
 
@@ -83,6 +89,20 @@ if __name__ == '__main__':
         return True
 
 
+    def send_system_status(tl_chat_id):
+        text = ""
+        text += "PC name: " + socket.gethostname()
+        text += "\nOS: " + platform.system()
+        text += "\nCPU: " + str(psutil.cpu_percent()) + "%"
+        text += "\nMemory: " + str(int(psutil.virtual_memory().percent)) + "%"
+        if psutil.sensors_battery():
+            text += "\nBattery: " + str(format(psutil.sensors_battery().percent, ".0f")) + "%"
+            if psutil.sensors_battery().power_plugged is True:
+                text += " | Charging"
+        text += "\nIP: " + get('http://ip-api.com/json/').json()["query"]
+        bot.send_message(tl_chat_id, text)
+
+
     @bot.message_handler(commands=['location'], func=authorization)
     @bot.message_handler(func=lambda msg: msg.text == Command.LOCATION and authorization(msg))
     def localization_command(message):
@@ -131,6 +151,12 @@ if __name__ == '__main__':
     @bot.message_handler(commands=['message'], func=authorization)
     def message_command(message):
         pyautogui.alert(message.text[9:])
+
+
+    @bot.message_handler(commands=['info'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.INFO and authorization(msg))
+    def info_command(message):
+        send_system_status(message.chat.id)
 
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)

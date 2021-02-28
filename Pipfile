@@ -10,6 +10,7 @@ requests = "==2.25.1"
 python-dotenv = "*"
 pyautogui = "*"
 opencv-python = "*"
+psutil = "*"
 
 [dev-packages]
 
