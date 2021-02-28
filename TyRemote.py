@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# import pyautogui as pyautogui
+import pyautogui as pyautogui
 import telebot
 import os
 from dotenv import load_dotenv
@@ -99,6 +99,20 @@ if __name__ == '__main__':
                 bot.send_location(message.chat.id, lat, lng)
             except Localization.FailedLocalization:
                 bot.reply_to(message, "Could not get the location.")
+
+
+    @bot.message_handler(commands=['screenshot'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.SCREENSHOT and authorization(msg))
+    def screenshot_command(message):
+        """
+           Send a screenshot
+        """
+        try:
+            image = pyautogui.screenshot()
+            bot.send_chat_action(message.chat.id, "upload_photo")
+            bot.send_photo(message.chat.id, image, timeout=100)
+        except pyautogui.PyAutoGUIException:
+            bot.reply_to(message, "Could not take screenshot")
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     print(BColors.YELLOW + "Waiting for Telegram commands\n" + BColors.ENDC)
