@@ -5,6 +5,8 @@ import telebot
 import os
 from dotenv import load_dotenv
 import Localization
+import cv2
+
 
 class BColors:
     HEADER = '\033[95m'
@@ -113,6 +115,18 @@ if __name__ == '__main__':
             bot.send_photo(message.chat.id, image, timeout=100)
         except pyautogui.PyAutoGUIException:
             bot.reply_to(message, "Could not take screenshot")
+
+
+    @bot.message_handler(commands=['webcam'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.WEBCAM and authorization(msg))
+    def webcam_command(message):
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        camera = cv2.VideoCapture(0)
+        _, image = camera.read()
+        del camera
+        _, encoded_image = cv2.imencode('.jpg', image)
+        bot.send_photo(message.chat.id, encoded_image, timeout=100)
+
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     print(BColors.YELLOW + "Waiting for Telegram commands\n" + BColors.ENDC)
