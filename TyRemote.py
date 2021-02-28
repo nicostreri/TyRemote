@@ -160,5 +160,8 @@ if __name__ == '__main__':
 
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
+    bot.send_message(tl_user_id, "System started")
+    send_system_status(tl_user_id)
+    print(BColors.GREEN + "[✓] Startup report sent.\n" + BColors.ENDC)
     print(BColors.YELLOW + "Waiting for Telegram commands\n" + BColors.ENDC)
     bot.polling(none_stop=True, interval=0, timeout=200)
