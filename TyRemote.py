@@ -128,6 +128,11 @@ if __name__ == '__main__':
         bot.send_photo(message.chat.id, encoded_image, timeout=100)
 
 
+    @bot.message_handler(commands=['message'], func=authorization)
+    def message_command(message):
+        pyautogui.alert(message.text[9:])
+
+
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     print(BColors.YELLOW + "Waiting for Telegram commands\n" + BColors.ENDC)
     bot.polling(none_stop=True, interval=0, timeout=200)
