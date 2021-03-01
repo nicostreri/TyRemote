@@ -316,6 +316,13 @@ if __name__ == '__main__':
     @bot.message_handler(func=lambda msg: msg.text == Command.MULTIMEDIA and authorization(msg))
     def show_multimedia_commands_command(message):
         send_keyboard_multimedia(message.chat.id)
+
+
+    @bot.message_handler(func=authorization)
+    def unknown_command(message):
+        bot.reply_to(message, "What's you say?")
+        send_keyboard(message.chat.id)
+
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     bot.send_message(tl_user_id, "System started")
     send_system_status(tl_user_id)
