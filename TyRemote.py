@@ -36,9 +36,9 @@ class Command:
     VOLUME_UP = u'🔊'  # TODO
     VOLUME_DOWN = u'🔉'  # TODO
     VOLUME_MUTE = u'🔇'  # TODO
-    PLAY_PAUSE = u'⏯'  # TODO
-    NEXT = u'⏭'  # TODO
-    PREVIOUS = u'⏮'  # TODO
+    PLAY_PAUSE = u'⏯'
+    NEXT = u'⏭'
+    PREVIOUS = u'⏮'
     INFO = u'ℹ️'
 
 
@@ -194,6 +194,25 @@ if __name__ == '__main__':
         pc.unlock()
 
 
+    @bot.message_handler(commands=['next'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.NEXT and authorization(msg))
+    @virtual_pc_handler
+    def next_command(message):
+        pc.multimedia_next()
+
+
+    @bot.message_handler(commands=['prev', 'previous'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.PREVIOUS and authorization(msg))
+    @virtual_pc_handler
+    def previous_command(message):
+        pc.multimedia_prev()
+
+
+    @bot.message_handler(commands=['play', 'pause'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.PLAY_PAUSE and authorization(msg))
+    @virtual_pc_handler
+    def play_pause_command(message):
+        pc.multimedia_play_pause()
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     bot.send_message(tl_user_id, "System started")
     send_system_status(tl_user_id)
