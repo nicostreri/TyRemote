@@ -4,6 +4,7 @@ import platform
 import socket
 import os
 import Localization
+import VirtualPC
 try:
     import psutil as psutil
     import pyautogui as pyautogui
@@ -25,8 +26,8 @@ class BColors:
 
 
 class Command:
-    LOCK = u'🔒'  # TODO
-    UNLOCK = u'🔓'  # TODO
+    LOCK = u'🔒'
+    UNLOCK = u'🔓'
     LOCATION = u'🌍'
     SCREENSHOT = u'🖼'
     WEBCAM = u'📸'
@@ -76,18 +77,37 @@ def get_environment():
     return h_api, t_token, t_user_id
 
 
+def get_virtual_pc():
+    instance = VirtualPC.get_virtual_pc_instance()
+    if not instance.check_dependencies():
+        print(BColors.RED + "[X] " + BColors.ENDC + "Dependencies required for virtual PC\n")
+        exit(1)
+    return instance
+
+
 if __name__ == '__main__':
     ascii()
     here_api, tl_token, tl_user_id = get_environment()
     tl_user_id = int(tl_user_id)
     bot = telebot.TeleBot(tl_token)
-
+    pc = get_virtual_pc()
 
     def authorization(message):
         if message.chat.id != tl_user_id:
             bot.send_message(message.chat.id, "Unauthorized!!")
             return False
         return True
+
+
+    def virtual_pc_handler(func):
+        def inner_function(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+                bot.send_message(tl_user_id, "Executed!")
+            except NotImplementedError:
+                bot.send_message(tl_user_id, "Command not implemented!")
+
+        return inner_function
 
 
     def send_system_status(tl_chat_id):
@@ -158,6 +178,20 @@ if __name__ == '__main__':
     @bot.message_handler(func=lambda msg: msg.text == Command.INFO and authorization(msg))
     def info_command(message):
         send_system_status(message.chat.id)
+
+
+    @bot.message_handler(commands=['lock'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.LOCK and authorization(msg))
+    @virtual_pc_handler
+    def lock_command(message):
+        pc.lock()
+
+
+    @bot.message_handler(commands=['unlock'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.UNLOCK and authorization(msg))
+    @virtual_pc_handler
+    def unlock_command(message):
+        pc.unlock()
 
 
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
