@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import platform
+import shutil
 import socket
 import os
 import Localization
@@ -89,10 +90,17 @@ def get_virtual_pc():
     return instance
 
 
+def check_binaries_dependencies():
+    if shutil.which("iwlist") is None or shutil.which("iw") is None or shutil.which("awk") is None:
+        print(BColors.RED + "[X] " + BColors.ENDC + "Dependencies required not installed (iwlist, iw, awk)\n")
+        exit(1)
+
+
 if __name__ == '__main__':
     ascii()
     here_api, tl_token, tl_user_id = get_environment()
     tl_user_id = int(tl_user_id)
+    check_binaries_dependencies()
     bot = telebot.TeleBot(tl_token)
     pc = get_virtual_pc()
 
