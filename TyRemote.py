@@ -33,9 +33,9 @@ class Command:
     WEBCAM = u'📸'
     POWER = u'🛑'  # TODO
     SUSPEND = u'🌙'  # TODO
-    VOLUME_UP = u'🔊'  # TODO
-    VOLUME_DOWN = u'🔉'  # TODO
-    VOLUME_MUTE = u'🔇'  # TODO
+    VOLUME_UP = u'🔊'
+    VOLUME_DOWN = u'🔉'
+    VOLUME_MUTE = u'🔇'
     PLAY_PAUSE = u'⏯'
     NEXT = u'⏭'
     PREVIOUS = u'⏮'
@@ -213,6 +213,27 @@ if __name__ == '__main__':
     @virtual_pc_handler
     def play_pause_command(message):
         pc.multimedia_play_pause()
+
+
+    @bot.message_handler(commands=['mute'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.VOLUME_MUTE and authorization(msg))
+    @virtual_pc_handler
+    def mute_command(message):
+        pc.volume_mute()
+
+
+    @bot.message_handler(commands=['volumeup'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.VOLUME_UP and authorization(msg))
+    @virtual_pc_handler
+    def volume_up_command(message):
+        pc.volume_up()
+
+
+    @bot.message_handler(commands=['volumedown'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.VOLUME_DOWN and authorization(msg))
+    @virtual_pc_handler
+    def volume_down_command(message):
+        pc.volume_down()
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     bot.send_message(tl_user_id, "System started")
     send_system_status(tl_user_id)
