@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 import platform
 import socket
-
-import psutil as psutil
-import pyautogui as pyautogui
-import telebot
 import os
-from dotenv import load_dotenv
-from requests import get
-
 import Localization
-import cv2
-
+try:
+    import psutil as psutil
+    import pyautogui as pyautogui
+    import telebot
+    from dotenv import load_dotenv
+    from requests import get
+    import cv2
+except ImportError:
+    print("Some modules are not installed.")
+    exit(1)
 
 class BColors:
     HEADER = '\033[95m'
