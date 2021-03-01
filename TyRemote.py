@@ -10,6 +10,7 @@ try:
     import pyautogui as pyautogui
     import telebot
     from dotenv import load_dotenv
+    from telebot import types
     from requests import get
     import cv2
 except ImportError:
@@ -26,13 +27,13 @@ class BColors:
 
 
 class Command:
-    LOCK = u'🔒'
-    UNLOCK = u'🔓'
+    LOCK = u'🔒 Lock'
+    UNLOCK = u'🔓 Unlock'
     LOCATION = u'🌍'
     SCREENSHOT = u'🖼'
     WEBCAM = u'📸'
-    POWER = u'🛑'
-    SUSPEND = u'🌙'
+    POWER = u'🛑 Shutdown'
+    SUSPEND = u'🌙 Sleep'
     VOLUME_UP = u'🔊'
     VOLUME_DOWN = u'🔉'
     VOLUME_MUTE = u'🔇'
@@ -40,7 +41,10 @@ class Command:
     NEXT = u'⏭'
     PREVIOUS = u'⏮'
     INFO = u'ℹ️'
-
+    MANAGER = u'⚙ Manager'
+    MULTIMEDIA = u'🎵 Media'
+    MESSAGE = u'💬'
+    GO_TO_MAIN = u'🔙 Exit'
 
 def ascii():
     print(BColors.GREEN + " _____    ______                     _        " + BColors.ENDC)
@@ -98,6 +102,47 @@ if __name__ == '__main__':
             return False
         return True
 
+
+    def send_keyboard(tl_chat_id):
+        markup = types.ReplyKeyboardMarkup()
+        manager_btn = types.KeyboardButton(Command.MANAGER)
+        multimedia_btn = types.KeyboardButton(Command.MULTIMEDIA)
+        markup.row(manager_btn, multimedia_btn)
+        bot.send_message(tl_chat_id, "Choose one option:", reply_markup=markup)
+
+
+    def send_keyboard_manager(tl_chat_id):
+        markup = types.ReplyKeyboardMarkup()
+        power_btn = types.KeyboardButton(Command.POWER)
+        suspend_btn = types.KeyboardButton(Command.SUSPEND)
+        lock_btn = types.KeyboardButton(Command.LOCK)
+        unlock_btn = types.KeyboardButton(Command.UNLOCK)
+        info_btn = types.KeyboardButton(Command.INFO)
+        location_btn = types.KeyboardButton(Command.LOCATION)
+        screenshot_btn = types.KeyboardButton(Command.SCREENSHOT)
+        webcam_btn = types.KeyboardButton(Command.WEBCAM)
+        message_btn = types.KeyboardButton(Command.MESSAGE)
+        back_btn = types.KeyboardButton(Command.GO_TO_MAIN)
+        markup.row(power_btn, suspend_btn, info_btn)
+        markup.row(location_btn, screenshot_btn, webcam_btn, message_btn)
+        markup.row(lock_btn, unlock_btn)
+        markup.row(back_btn)
+        bot.send_message(tl_chat_id, "Choose one option:", reply_markup=markup)
+
+
+    def send_keyboard_multimedia(tl_chat_id):
+        markup = types.ReplyKeyboardMarkup()
+        volume_up_btn = types.KeyboardButton(Command.VOLUME_UP)
+        volume_down_btn = types.KeyboardButton(Command.VOLUME_DOWN)
+        volume_mute_btn = types.KeyboardButton(Command.VOLUME_MUTE)
+        play_pause_btn = types.KeyboardButton(Command.PLAY_PAUSE)
+        next_btn = types.KeyboardButton(Command.NEXT)
+        prev_btn = types.KeyboardButton(Command.PREVIOUS)
+        back_btn = types.KeyboardButton(Command.GO_TO_MAIN)
+        markup.row(volume_down_btn, volume_mute_btn, volume_up_btn)
+        markup.row(prev_btn, play_pause_btn, next_btn)
+        markup.row(back_btn)
+        bot.send_message(tl_chat_id, "Choose one option:", reply_markup=markup)
 
     def virtual_pc_handler(func):
         def inner_function(*args, **kwargs):
@@ -250,6 +295,22 @@ if __name__ == '__main__':
         pc.sleep()
 
 
+    @bot.message_handler(commands=['start', 'help'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.GO_TO_MAIN and authorization(msg))
+    def welcome_command(message):
+        send_keyboard(message.chat.id)
+
+
+    @bot.message_handler(commands=['manager'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.MANAGER and authorization(msg))
+    def show_manager_commands_command(message):
+        send_keyboard_manager(message.chat.id)
+
+
+    @bot.message_handler(commands=['multimedia'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.MULTIMEDIA and authorization(msg))
+    def show_multimedia_commands_command(message):
+        send_keyboard_multimedia(message.chat.id)
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     bot.send_message(tl_user_id, "System started")
     send_system_status(tl_user_id)
