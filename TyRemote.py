@@ -31,8 +31,8 @@ class Command:
     LOCATION = u'🌍'
     SCREENSHOT = u'🖼'
     WEBCAM = u'📸'
-    POWER = u'🛑'  # TODO
-    SUSPEND = u'🌙'  # TODO
+    POWER = u'🛑'
+    SUSPEND = u'🌙'
     VOLUME_UP = u'🔊'
     VOLUME_DOWN = u'🔉'
     VOLUME_MUTE = u'🔇'
@@ -234,6 +234,22 @@ if __name__ == '__main__':
     @virtual_pc_handler
     def volume_down_command(message):
         pc.volume_down()
+
+
+    @bot.message_handler(commands=['poweroff'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.POWER and authorization(msg))
+    @virtual_pc_handler
+    def power_command(message):
+        pc.shutdown()
+
+
+    @bot.message_handler(commands=['suspend'], func=authorization)
+    @bot.message_handler(func=lambda msg: msg.text == Command.SUSPEND and authorization(msg))
+    @virtual_pc_handler
+    def suspend_command(message):
+        pc.sleep()
+
+
     print(BColors.GREEN + "[✓] Started.\n" + BColors.ENDC)
     bot.send_message(tl_user_id, "System started")
     send_system_status(tl_user_id)
