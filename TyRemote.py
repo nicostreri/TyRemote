@@ -295,6 +295,11 @@ if __name__ == '__main__':
         pc.sleep()
 
 
+    @bot.message_handler(func=lambda msg: msg.text == Command.MESSAGE and authorization(msg))
+    def send_message_command(message):
+        bot.send_message(message.chat.id, "To display a message on the screen use:\n /message <text>")
+
+
     @bot.message_handler(commands=['start', 'help'], func=authorization)
     @bot.message_handler(func=lambda msg: msg.text == Command.GO_TO_MAIN and authorization(msg))
     def welcome_command(message):
