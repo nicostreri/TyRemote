@@ -29,7 +29,6 @@ $ pipenv install --ignore-pipfile
 It requires that on Linux you have "iwlist", "iw" and "awk" installed. And on Windows "WifiInfoView.exe" (see below). 
 
 Besides, it is required to have installed the dependencies related to the implementation of VirtualPC.
-**Note:** 
 
 ### Installing
 First, you create a new Here API key by following these [steps](https://developer.here.com/documentation/identity-access-management/dev_guide/topics/plat-using-apikeys.html).
