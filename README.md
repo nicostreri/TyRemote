@@ -12,7 +12,7 @@ It allows you to control your PC with a Telegram Bot. You can:
 * lock/unlock :unlock:
 * and check your PC status
 
-It is compatible with Windows and Linux. Note that I built this program for personal purposes, may not be compatible with all Linux distributions. See later the **VirtualPC** section.
+It is compatible with Windows and Linux. Note that I built this program for personal purposes, may not be compatible with all Linux distributions. See later the [VirtualPC section.](#virtualpc)
 
 ## Getting Started
 
@@ -28,7 +28,7 @@ $ pipenv install --ignore-pipfile
 
 It requires that on Linux you have "iwlist", "iw" and "awk" installed. And on Windows "WifiInfoView.exe" (see below). 
 
-Besides, it is required to have installed the dependencies related to the implementation of VirtualPC.
+Besides, it is required to have installed the dependencies related to the implementation of [VirtualPC](#virtualpc).
 
 ### Installing
 First, you create a new Here API key by following these [steps](https://developer.here.com/documentation/identity-access-management/dev_guide/topics/plat-using-apikeys.html).
